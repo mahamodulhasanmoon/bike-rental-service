@@ -13,11 +13,13 @@ const userSchema = new Schema<IUser>({
     required: [true, 'Password is required'],
   },
   phone: {
-     type: String,
-     required: [true, 'Phone number is required'] },
-  address: { 
-    type: String, 
-    required: [true, 'Address is required'] },
+    type: String,
+    required: [true, 'Phone number is required'],
+  },
+  address: {
+    type: String,
+    required: [true, 'Address is required'],
+  },
   role: {
     type: String,
     required: [true, 'Role is required'],
@@ -30,5 +32,3 @@ const userSchema = new Schema<IUser>({
 });
 
 export const User = model<IUser>('User', userSchema);
-
-
