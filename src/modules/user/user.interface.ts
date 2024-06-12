@@ -5,4 +5,5 @@ export interface IUser {
   phone: string;
   address: string;
   role: 'user' | 'admin';
+  isDeleted: boolean;
 }
