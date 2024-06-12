@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from './user.interface';
+import { saltRound } from '../../config';
+import bcrypt from 'bcrypt'
 
 const userSchema = new Schema<IUser>({
   name: { type: String, required: [true, 'Name is required'] },
@@ -11,6 +13,7 @@ const userSchema = new Schema<IUser>({
   password: {
     type: String,
     required: [true, 'Password is required'],
+    select:0
   },
   phone: {
     type: String,
@@ -29,6 +32,30 @@ const userSchema = new Schema<IUser>({
     },
     default: 'user',
   },
+},{
+  timestamps:true
+});
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this; // doc
+  user.password = await bcrypt.hash(user.password, Number(saltRound));
+  next();
+});
+
+
+userSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
 });
 
 export const User = model<IUser>('User', userSchema);
