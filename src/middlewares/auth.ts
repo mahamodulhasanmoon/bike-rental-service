@@ -7,9 +7,6 @@
 // import { User } from '../modules/user/user.model';
 // import { IUserRole } from '../modules/user/user.interface';
 
-
-
-
 // const auth = (...requiredRoles: IUserRole[]) => {
 //   return catchAsync(async (req: Request, _res: Response, next: NextFunction) => {
 //     const token = req.headers.authorization;

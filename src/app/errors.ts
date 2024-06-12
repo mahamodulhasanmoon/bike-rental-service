@@ -100,5 +100,5 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, _next) => {
 
   return res
     .status(status)
-    .json({ status, success, message, errors,stackTrace });
+    .json({ status, success, message, errors, stackTrace });
 };
