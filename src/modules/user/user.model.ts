@@ -68,5 +68,9 @@ userSchema.statics.isUserExists = async function (email) {
 userSchema.methods.comparePassword = function (password: string) {
   return bcrypt.compareSync(password, this.password);
 };
+userSchema.post('save', function (doc, next) {
+   doc.password = ''
+  next();
+});
 
 export const User = model<IUser, IUserModel>('User', userSchema);
