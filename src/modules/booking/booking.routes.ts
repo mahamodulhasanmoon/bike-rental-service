@@ -9,7 +9,7 @@ import auth from '../../middlewares/auth';
 
 export const rentalRoutes: Router = Router();
 
-rentalRoutes.get('/', getAllBookingController);
+rentalRoutes.get('/', auth('user', 'admin'), getAllBookingController);
 rentalRoutes.post(
   '/',
   auth('user', 'admin'),

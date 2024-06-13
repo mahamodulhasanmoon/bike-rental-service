@@ -48,8 +48,8 @@ export const createBookingService = async (payload: Partial<IBooking>) => {
 
 // Get all Bookings
 
-export const getAllBookingsService = async (query: Record<string, unknown>) => {
-  const Bookingqueries = new QueryBuilder(Booking.find(), query);
+export const getAllBookingsService = async (userId:string,query: Record<string, unknown>) => {
+  const Bookingqueries = new QueryBuilder(Booking.find({userId}), query);
 
   const result = await Bookingqueries.modelQuery;
   return result;
