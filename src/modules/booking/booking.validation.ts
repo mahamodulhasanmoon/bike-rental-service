@@ -8,7 +8,7 @@ export const createBookingValidation = z.object({
         invalid_type_error: 'Bike name must be a string',
       })
       .optional(),
-    startTime: z.date({
+    startTime: z.string({
       required_error: 'Time Is Required',
       invalid_type_error: 'Must Be TimeStamp',
     }),

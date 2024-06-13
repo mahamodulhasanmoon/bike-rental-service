@@ -14,7 +14,7 @@ const userSchema = new Schema<IUser, IUserModel>(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      select:0
+      select: 0,
     },
     phone: {
       type: String,
@@ -51,10 +51,9 @@ userSchema.pre('find', function (next) {
 });
 
 userSchema.pre('findOne', function (next) {
-  this.find({ isDeleted: { $ne: true  } });
+  this.find({ isDeleted: { $ne: true } });
   next();
 });
-
 
 userSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });

@@ -5,12 +5,14 @@ import {
 } from './booking.controller';
 import { requestValidator } from '../../middlewares/requestValidator';
 import { createBookingValidation } from './booking.validation';
+import auth from '../../middlewares/auth';
 
 export const rentalRoutes: Router = Router();
 
 rentalRoutes.get('/', getAllBookingController);
-rentalRoutes.get(
+rentalRoutes.post(
   '/',
+  auth('user', 'admin'),
   requestValidator(createBookingValidation),
   createBookingController,
 );

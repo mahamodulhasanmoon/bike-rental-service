@@ -19,7 +19,7 @@ export const createUserService = async (payload: IUser) => {
 };
 
 export const loginService = async (payload: ILogin) => {
-  const user = await User.findOne({email:payload.email}).select('+password');
+  const user = await User.findOne({ email: payload.email }).select('+password');
   // Check User Exist Or not
   if (!user) {
     throw new CustomError(404, 'User not exists please create an account');

@@ -24,4 +24,4 @@ bikeRoutes.put(
   requestValidator(updateBikeValidation),
   updateBikeController,
 );
-bikeRoutes.delete('/:id',auth('admin'), deleteBikeController);
+bikeRoutes.delete('/:id', auth('admin'), deleteBikeController);

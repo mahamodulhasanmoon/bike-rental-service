@@ -17,7 +17,7 @@ export const getUserController: RequestHandler = catchAsync(
 );
 export const updateUserController: RequestHandler = catchAsync(
   async (req, res) => {
-    const result = await updateUserService(req.user.userId,req.body);
+    const result = await updateUserService(req.user.userId, req.body);
     sendResponse(res, {
       status: httpStatus.OK,
       success: true,

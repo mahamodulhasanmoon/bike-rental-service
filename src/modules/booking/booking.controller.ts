@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
-import { IBooking } from './booking.interface';
 import {
   createBookingService,
   deleteBookingService,
@@ -12,12 +11,12 @@ import { sendResponse } from '../../utils/sendResponse';
 
 export const createBookingController: RequestHandler = catchAsync(
   async (req, res) => {
-    const bookingData: IBooking = req.body;
-    // const userId = req.user._id
-    // const senitizeData = {
+    const userId = req.user.userId;
 
-    // }
-    const result = await createBookingService(bookingData);
+    const result = await createBookingService({
+      ...req.body,
+      userId: userId,
+    });
     sendResponse(res, {
       status: httpStatus.CREATED,
       success: true,

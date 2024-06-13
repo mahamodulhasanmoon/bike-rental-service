@@ -12,11 +12,14 @@ const bookingSchema = new Schema<IBooking>(
     bikeId: {
       type: Schema.Types.ObjectId,
       ref: 'Bike',
-      required: [true, 'Bike ID is required'],
+      required: [true, 'Bike is required'],
     },
     startTime: { type: Date, required: [true, 'Start time is required'] },
-    returnTime: { type: Date, required: [true, 'Return time is required'] },
-    totalCost: { type: Number, required: [true, 'Total cost is required'] },
+    returnTime: { type: Date, default: null },
+    totalCost: {
+      type: Number,
+      default: 0,
+    },
     isReturned: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },

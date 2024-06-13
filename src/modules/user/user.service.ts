@@ -11,7 +11,6 @@ export const getUserService = async (id: string) => {
   return result;
 };
 
-
 export const updateUserService = async (id: string, data: Partial<IUser>) => {
   const result = await User.findByIdAndUpdate(id, data, {
     new: true,
