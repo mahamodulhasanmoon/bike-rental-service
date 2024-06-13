@@ -19,7 +19,9 @@ export const createUserService = async (payload: IUser) => {
 };
 
 export const loginService = async (payload: ILogin) => {
+ 
   const user = await User.findOne({ email: payload.email }).select('+password');
+  
   // Check User Exist Or not
   if (!user) {
     throw new CustomError(404, 'User not exists please create an account');
@@ -44,6 +46,7 @@ export const loginService = async (payload: ILogin) => {
 
   //   now Need to make AccessToken and RefreshToken
 
+
   const accessToken = genarateToken(
     jwtPayload,
     access_token,
@@ -55,10 +58,12 @@ export const loginService = async (payload: ILogin) => {
     refresh_token,
     refresh_tokenExpiry,
   );
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const { password, ...rest } = user.toObject();
   return {
     accessToken,
     refreshToken,
-    user,
+    rest,
   };
 };
 

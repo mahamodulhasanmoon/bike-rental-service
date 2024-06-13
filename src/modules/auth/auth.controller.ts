@@ -26,7 +26,7 @@ export const createUserController: RequestHandler = catchAsync(
 export const loginController: RequestHandler = catchAsync(async (req, res) => {
   const payload: IUser = req.body;
   const result = await loginService(payload);
-  const { refreshToken, accessToken, user } = result;
+  const { refreshToken, accessToken, rest } = result;
 
   res.cookie('refreshToken', refreshToken, {
     secure: NODE_ENV === 'production',
@@ -37,7 +37,7 @@ export const loginController: RequestHandler = catchAsync(async (req, res) => {
     success: true,
     message: 'logged in successfully',
     token: accessToken,
-    data: user,
+    data: rest,
   });
 });
 
