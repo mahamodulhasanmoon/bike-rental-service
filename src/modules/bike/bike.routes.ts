@@ -7,18 +7,21 @@ import {
   getAllBikeController,
   updateBikeController,
 } from './bike.controller';
+import auth from '../../middlewares/auth';
 
 export const bikeRoutes: Router = Router();
 
 bikeRoutes.get('/', getAllBikeController);
 bikeRoutes.post(
   '/',
+  auth('admin'),
   requestValidator(createBikeValidation),
   createBikeController,
 );
 bikeRoutes.put(
   '/:id',
+  auth('admin'),
   requestValidator(updateBikeValidation),
   updateBikeController,
 );
-bikeRoutes.delete('/:id', deleteBikeController);
+bikeRoutes.delete('/:id',auth('admin'), deleteBikeController);
