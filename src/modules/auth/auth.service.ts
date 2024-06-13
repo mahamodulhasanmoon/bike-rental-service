@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
 import httpStatus from 'http-status';
 import { CustomError } from '../../errors/CustomError';
 import { IUser } from '../user/user.interface';
@@ -59,3 +61,40 @@ export const loginService = async (payload: ILogin) => {
     user
   };
 };
+
+export const refreshTokenService = async(token: string)=>{
+    const decoded = jwt.verify(
+        token,
+        refresh_token,
+      ) as JwtPayload;
+    
+      const { email } = decoded;
+      const user = await User.isUserExists(email)
+
+      if (!user) {
+        throw new CustomError(httpStatus.NOT_FOUND, 'This user is not found !');
+      }
+      // checking if the user is already deleted
+      const isDeleted = user?.isDeleted;
+    
+      if (isDeleted) {
+        throw new CustomError(httpStatus.FORBIDDEN, 'This user is deleted !');
+      }
+
+      const jwtPayload: TJwtPayload = {
+        userId: (user as any)._id,
+        email:user.email,
+        name:user.name,
+        role: user.role,
+      };
+
+      const accessToken = genarateToken(
+        jwtPayload,
+        access_token,
+        access_tokenExpiry,
+      );
+
+     return accessToken
+    
+      
+}

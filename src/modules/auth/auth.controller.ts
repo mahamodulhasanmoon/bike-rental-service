@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { IUser } from '../user/user.interface';
-import { createUserService, loginService } from './auth.service';
+import { createUserService, loginService, refreshTokenService } from './auth.service';
 import { sendResponse } from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { NODE_ENV } from '../../config';
@@ -36,3 +36,17 @@ export const loginController: RequestHandler = catchAsync(async (req, res) => {
     data: user,
   });
 });
+
+
+export const getMe:RequestHandler = catchAsync(async(req,res) => {
+  const { refreshToken } = req.cookies;
+  const result = await refreshTokenService(refreshToken)
+  sendResponse(res, {
+    status: httpStatus.OK,
+    success: true,
+    message: 'Access token is retrieved succesfully!',
+    token: result,
+  });
+
+
+})
