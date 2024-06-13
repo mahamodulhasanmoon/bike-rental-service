@@ -15,7 +15,7 @@ const auth = (...requiredRoles: IUserRole[]) => {
       if (!token) {
         throw new CustomError(
           httpStatus.UNAUTHORIZED,
-          'You are not authorized!',
+          'You Must Logged in first',
         );
       }
 
@@ -41,7 +41,7 @@ const auth = (...requiredRoles: IUserRole[]) => {
       if (requiredRoles && !requiredRoles.includes(role)) {
         throw new CustomError(
           httpStatus.UNAUTHORIZED,
-          'You are not authorized users!',
+          'You have no access to this route',
         );
       }
 
