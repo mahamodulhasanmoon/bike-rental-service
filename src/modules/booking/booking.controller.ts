@@ -29,8 +29,8 @@ export const createBookingController: RequestHandler = catchAsync(
 
 export const getAllBookingController: RequestHandler = catchAsync(
   async (req, res) => {
-    const userId = req.user.userId
-    const result = await getAllBookingsService(userId,req.query);
+    const userId = req.user.userId;
+    const result = await getAllBookingsService(userId, req.query);
     sendResponse(res, {
       status: httpStatus.OK,
       success: true,
@@ -64,9 +64,7 @@ export const deleteBookingController: RequestHandler = catchAsync(
   },
 );
 
-
-
-// for Return 
+// for Return
 
 export const returnBookingController: RequestHandler = catchAsync(
   async (req, res) => {

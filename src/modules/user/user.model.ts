@@ -36,7 +36,6 @@ const userSchema = new Schema<IUser, IUserModel>(
   },
   {
     timestamps: true,
-    
   },
 );
 userSchema.pre('save', async function (next) {
@@ -70,7 +69,7 @@ userSchema.methods.comparePassword = function (password: string) {
   return bcrypt.compareSync(password, this.password);
 };
 userSchema.post('save', function (doc, next) {
-   doc.password = ''
+  doc.password = '';
   next();
 });
 

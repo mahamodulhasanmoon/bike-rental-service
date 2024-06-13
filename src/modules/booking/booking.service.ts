@@ -84,22 +84,19 @@ export const deleteBookingService = async (id: string) => {
 //  for return bike Service with Rental
 
 export const returnBookingService = async (id: string) => {
-  const bookingData:any = await Booking.findById(id).populate('bikeId');
+  const bookingData: any = await Booking.findById(id).populate('bikeId');
   // Parse start time and current time
   const startTime = new Date((bookingData as IBooking)?.startTime).getTime();
   const currentTime = new Date().getTime();
 
   // Calculate the difference in milliseconds
   const totalRiding = (currentTime - startTime) / (1000 * 60 * 60);
-  const ridingCost = (
-    totalRiding * (bookingData as any)?.bikeId.pricePerHour
-  );
+  const ridingCost = totalRiding * (bookingData as any)?.bikeId.pricePerHour;
 
-  const ridingSession = await  startSession();
+  const ridingSession = await startSession();
   ridingSession.startTransaction();
 
   try {
-
     // need to update bike conditions
     await Bike.findByIdAndUpdate(
       id,
@@ -107,30 +104,27 @@ export const returnBookingService = async (id: string) => {
       { ridingSession, new: true },
     );
 
-    //  now updated in main collection 
+    //  now updated in main collection
 
-    const ridingData:Partial<IBooking> ={
-      returnTime:new Date(),
-      totalCost:ridingCost,
-      isReturned:true
-    } 
+    const ridingData: Partial<IBooking> = {
+      returnTime: new Date(),
+      totalCost: ridingCost,
+      isReturned: true,
+    };
 
-   const result = await Booking.findByIdAndUpdate(
+    const result = await Booking.findByIdAndUpdate(
       bookingData._id,
       ridingData,
       { ridingSession, new: true },
     );
 
-    ridingSession.commitTransaction()
-    ridingSession.endSession()
+    ridingSession.commitTransaction();
+    ridingSession.endSession();
     return result;
     // part 2 update rantal information
-
   } catch (error: any) {
     await ridingSession.abortTransaction();
     ridingSession.endSession();
     throw new CustomError(error.status, error.message);
   }
-
-  
 };
