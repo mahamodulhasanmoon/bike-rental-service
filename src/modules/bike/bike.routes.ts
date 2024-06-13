@@ -1,9 +1,14 @@
 import { Router } from 'express';
 import { requestValidator } from '../../middlewares/requestValidator';
 import { createBikeValidation, updateBikeValidation } from './bike.validation';
-import { createBikeController, deleteBikeController, getAllBikeController, updateBikeController } from './bike.controller';
+import {
+  createBikeController,
+  deleteBikeController,
+  getAllBikeController,
+  updateBikeController,
+} from './bike.controller';
 
-export const bikeRoutes:Router = Router();
+export const bikeRoutes: Router = Router();
 
 bikeRoutes.get('/', getAllBikeController);
 bikeRoutes.post(
@@ -16,7 +21,4 @@ bikeRoutes.put(
   requestValidator(updateBikeValidation),
   updateBikeController,
 );
-bikeRoutes.delete(
-  '/:id',
-  deleteBikeController,
-);
+bikeRoutes.delete('/:id', deleteBikeController);
