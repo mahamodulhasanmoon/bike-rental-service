@@ -1,5 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import { CustomError } from '../../errors/CustomError';
 import { IUser } from '../user/user.interface';
@@ -19,7 +19,7 @@ export const createUserService = async (payload: IUser) => {
 };
 
 export const loginService = async (payload: ILogin) => {
-  const user = await User.isUserExists(payload.email);
+  const user = await User.findOne({email:payload.email}).select('+password');
   // Check User Exist Or not
   if (!user) {
     throw new CustomError(404, 'User not exists please create an account');
@@ -37,8 +37,8 @@ export const loginService = async (payload: ILogin) => {
   }
   const jwtPayload: TJwtPayload = {
     userId: (user as any)._id,
-    email:user.email,
-    name:user.name,
+    email: user.email,
+    name: user.name,
     role: user.role,
   };
 
@@ -58,43 +58,38 @@ export const loginService = async (payload: ILogin) => {
   return {
     accessToken,
     refreshToken,
-    user
+    user,
   };
 };
 
-export const refreshTokenService = async(token: string)=>{
-    const decoded = jwt.verify(
-        token,
-        refresh_token,
-      ) as JwtPayload;
-    
-      const { email } = decoded;
-      const user = await User.isUserExists(email)
+export const refreshTokenService = async (token: string) => {
+  const decoded = jwt.verify(token, refresh_token) as JwtPayload;
 
-      if (!user) {
-        throw new CustomError(httpStatus.NOT_FOUND, 'This user is not found !');
-      }
-      // checking if the user is already deleted
-      const isDeleted = user?.isDeleted;
-    
-      if (isDeleted) {
-        throw new CustomError(httpStatus.FORBIDDEN, 'This user is deleted !');
-      }
+  const { email } = decoded;
+  const user = await User.isUserExists(email);
 
-      const jwtPayload: TJwtPayload = {
-        userId: (user as any)._id,
-        email:user.email,
-        name:user.name,
-        role: user.role,
-      };
+  if (!user) {
+    throw new CustomError(httpStatus.NOT_FOUND, 'This user is not found !');
+  }
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
 
-      const accessToken = genarateToken(
-        jwtPayload,
-        access_token,
-        access_tokenExpiry,
-      );
+  if (isDeleted) {
+    throw new CustomError(httpStatus.FORBIDDEN, 'This user is deleted !');
+  }
 
-     return accessToken
-    
-      
-}
+  const jwtPayload: TJwtPayload = {
+    userId: (user as any)._id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+  };
+
+  const accessToken = genarateToken(
+    jwtPayload,
+    access_token,
+    access_tokenExpiry,
+  );
+
+  return accessToken;
+};
