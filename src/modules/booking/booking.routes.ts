@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   createBookingController,
   getAllBookingController,
+  returnBookingController,
 } from './booking.controller';
 import { requestValidator } from '../../middlewares/requestValidator';
 import { createBookingValidation } from './booking.validation';
@@ -15,4 +16,10 @@ rentalRoutes.post(
   auth('user', 'admin'),
   requestValidator(createBookingValidation),
   createBookingController,
+);
+rentalRoutes.put(
+  '/:id/return',
+  auth('admin'),
+  // requestValidator(createBookingValidation),
+  returnBookingController,
 );

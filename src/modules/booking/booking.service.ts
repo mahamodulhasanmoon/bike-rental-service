@@ -25,18 +25,16 @@ export const createBookingService = async (payload: Partial<IBooking>) => {
     }
     //  Update Bike Information Session
 
-     await Bike.findByIdAndUpdate(
+    await Bike.findByIdAndUpdate(
       payload.bikeId,
       { isAvailable: false },
-      { session, new: true } 
+      { session, new: true },
     );
 
-    // now Creating main Data 
-    const result = await Booking.create([payload],{session})
+    // now Creating main Data
+    const result = await Booking.create([payload], { session });
     await session.commitTransaction();
     session.endSession();
-    
-
 
     return result;
   } catch (error: any) {
@@ -48,8 +46,11 @@ export const createBookingService = async (payload: Partial<IBooking>) => {
 
 // Get all Bookings
 
-export const getAllBookingsService = async (userId:string,query: Record<string, unknown>) => {
-  const Bookingqueries = new QueryBuilder(Booking.find({userId}), query);
+export const getAllBookingsService = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const Bookingqueries = new QueryBuilder(Booking.find({ userId }), query);
 
   const result = await Bookingqueries.modelQuery;
   return result;
@@ -78,4 +79,58 @@ export const deleteBookingService = async (id: string) => {
     },
   );
   return result;
+};
+
+//  for return bike Service with Rental
+
+export const returnBookingService = async (id: string) => {
+  const bookingData:any = await Booking.findById(id).populate('bikeId');
+  // Parse start time and current time
+  const startTime = new Date((bookingData as IBooking)?.startTime).getTime();
+  const currentTime = new Date().getTime();
+
+  // Calculate the difference in milliseconds
+  const totalRiding = (currentTime - startTime) / (1000 * 60 * 60);
+  const ridingCost = (
+    totalRiding * (bookingData as any)?.bikeId.pricePerHour
+  );
+
+  const ridingSession = await  startSession();
+  ridingSession.startTransaction();
+
+  try {
+
+    // need to update bike conditions
+    await Bike.findByIdAndUpdate(
+      id,
+      { isAvailable: true },
+      { ridingSession, new: true },
+    );
+
+    //  now updated in main collection 
+
+    const ridingData:Partial<IBooking> ={
+      returnTime:new Date(),
+      totalCost:ridingCost,
+      isReturned:true
+    } 
+
+   const result = await Booking.findByIdAndUpdate(
+      bookingData._id,
+      ridingData,
+      { ridingSession, new: true },
+    );
+
+    ridingSession.commitTransaction()
+    ridingSession.endSession()
+    return result;
+    // part 2 update rantal information
+
+  } catch (error: any) {
+    await ridingSession.abortTransaction();
+    ridingSession.endSession();
+    throw new CustomError(error.status, error.message);
+  }
+
+  
 };

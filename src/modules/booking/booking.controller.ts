@@ -5,6 +5,7 @@ import {
   createBookingService,
   deleteBookingService,
   getAllBookingsService,
+  returnBookingService,
   updateBookingService,
 } from './booking.service';
 import { sendResponse } from '../../utils/sendResponse';
@@ -58,6 +59,22 @@ export const deleteBookingController: RequestHandler = catchAsync(
       status: httpStatus.OK,
       success: true,
       message: 'Booking deleted successfully',
+      data: result,
+    });
+  },
+);
+
+
+
+// for Return 
+
+export const returnBookingController: RequestHandler = catchAsync(
+  async (req, res) => {
+    const result = await returnBookingService(req.params.id);
+    sendResponse(res, {
+      status: httpStatus.CREATED,
+      success: true,
+      message: 'Booking returned successfully',
       data: result,
     });
   },
