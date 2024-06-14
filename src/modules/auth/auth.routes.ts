@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { requestValidator } from '../../middlewares/requestValidator';
-import { createUserValidation } from './auth.validaton';
+import { createUserValidation, loginValidation } from './auth.validaton';
 import {
   createUserController,
   getMe,
@@ -16,11 +16,10 @@ authRoutes.post(
 );
 authRoutes.post(
   '/login',
-  // requestValidator(createUserValidation),
+  requestValidator(loginValidation),
   loginController,
 );
 authRoutes.get(
   '/me',
-  // requestValidator(createUserValidation),
   getMe,
 );

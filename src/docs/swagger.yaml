@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: Test Api Documentation
+  title: Bike Rental Reservation System Backend
+  description: API documentation for Jhankar Mahbub's Bike Rental Reservation System
   version: 1.0.0
-  description: Hello Basic Project Learning Perpose
   termsOfService: https://example.com/terms
   contact:
     name: Mahamodul Hasan Moon
@@ -13,170 +13,283 @@ info:
     url: https://apache.com
 servers:
   - description: Development
-    url: https://localhost:8000/api/v1
-tags:
-  - name: HealthChecks
-    description: public Api Endpoints  And Autentation Perpose
-  - name: Authentications
-    description: public Api Endpoints  And Autentation Perpose
-  - name: Posts
-    description: public Api Endpoints  And Autentation Perpose
-  - name: Blogs
-    description: public Api Endpoints  And Autentation Perpose
-
+    url: http://localhost:8000/api
 paths:
-  /health:
-    get:
-      description: Testing For Server Health
-      tags:
-        - HealthChecks
-      responses:
-        '200':
-          description: it will Return Success MEsssage
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: ok
   /auth/signup:
     post:
-      description: For Creating An Account For Authentication
-      tags: [Authentications]
+      summary: Register a new user
       requestBody:
+        required: true
         content:
-          'application/json':
+          application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Mahamodul Hasan Moon
-                email:
-                  type: string
-                  format: email
-                  example: mahamodulhasan.moon@gmail.com
-                password:
-                  type: string
-                  format: password
-                  example: password123
-              required:
-                - name
-                - email
-                - password
+              $ref: '#/components/schemas/UserSignup'
       responses:
         '201':
-          description: Successfully Created Account
+          description: User registered successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    format: int32
-                    example: 201
-                  message:
-                    type: string
-                    example: user created Successfully
-                  data:
-                    type: object
-                    properties:
-                      access_token:
-                        type: string
-                        example: iIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: /auth/signup
-                      signin:
-                        type: string
-                        example: /auth/login
-
-        '400':
-          $ref: '#/components/responses/400'
+                $ref: '#/components/schemas/User'
   /auth/login:
     post:
-      description: For Login Any User
-      tags: [Authentications]
+      summary: User login
       requestBody:
+        required: true
         content:
-          'application/json':
+          application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  format: email
-                  example: mahamodulhasan.moon@gmail.com
-                password:
-                  type: string
-                  format: password
-                  example: password123
-              required:
-                - email
-                - password
+              $ref: '#/components/schemas/UserLogin'
       responses:
         '200':
-          description: Logged in Successfully
+          description: User logged in successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  statusCode:
-                    type: integer
-                    format: int32
-                    example: 200
-                  message:
-                    type: string
-                    example: Logged in Successfully
-                  data:
-                    type: object
-                    properties:
-                      access_token:
-                        type: string
-                        example: iIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: /auth/login
-
-        '400':
-          $ref: '#/components/responses/400'
-
-# make components
-
-components:
-  responses:
-    '400':
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              statusCode:
-                type: integer
-                format: int32
-                example: 400
-              error:
-                type: string
-                example: bad Request
-              data:
+                $ref: '#/components/schemas/LoginResponse'
+  /users/me:
+    get:
+      summary: Get user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Update user profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /bikes:
+    post:
+      summary: Add a new bike (Admin Only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bike'
+      responses:
+        '200':
+          description: Bike added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bike'
+    get:
+      summary: Get all bikes
+      responses:
+        '200':
+          description: Bikes retrieved successfully
+          content:
+            application/json:
+              schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    field:
-                      type: string
-                      example: email
-                    message:
-                      type: string
-                      example: invalid Email
+                  $ref: '#/components/schemas/Bike'
+  /bikes/{id}:
+    put:
+      summary: Update bike details (Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BikeUpdate'
+      responses:
+        '200':
+          description: Bike updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bike'
+    delete:
+      summary: Delete a bike (Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bike deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bike'
+  /rentals:
+    post:
+      summary: Create a rental
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rental'
+      responses:
+        '200':
+          description: Rental created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+    get:
+      summary: Get all rentals for user (My rentals)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Rentals retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rental'
+  /rentals/{id}/return:
+    put:
+      summary: Return a bike (Admin Only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bike returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+components:
+  schemas:
+    UserSignup:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        role:
+          type: string
+          enum: [admin, user]
+      required:
+        - name
+        - email
+        - password
+        - role
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        data:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        role:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+    Bike:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        pricePerHour:
+          type: number
+        cc:
+          type: integer
+        year:
+          type: integer
+        model:
+          type: string
+        brand:
+          type: string
+    BikeUpdate:
+      type: object
+      properties:
+        pricePerHour:
+          type: number
+    Rental:
+      type: object
+      properties:
+        bikeId:
+          type: string
+        startTime:
+          type: string
+      required:
+        - bikeId
+        - startTime
