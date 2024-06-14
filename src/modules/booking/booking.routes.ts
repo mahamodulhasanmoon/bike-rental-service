@@ -20,6 +20,5 @@ rentalRoutes.post(
 rentalRoutes.put(
   '/:id/return',
   auth('admin'),
-  // requestValidator(createBookingValidation),
   returnBookingController,
 );

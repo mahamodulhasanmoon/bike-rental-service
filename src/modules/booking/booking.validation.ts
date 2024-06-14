@@ -14,3 +14,4 @@ export const createBookingValidation = z.object({
     }),
   }),
 });
+
