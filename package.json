@@ -10,7 +10,8 @@
     "lint": "eslint src --ignore-path .eslintignore --ext .ts",
     "format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
     "format:fix": "npx prettier --write src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"tsc"
   },
   "keywords": [],
   "author": "",
