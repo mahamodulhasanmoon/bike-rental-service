@@ -10,7 +10,18 @@ import { access_token } from '../config';
 const auth = (...requiredRoles: IUserRole[]) => {
   return catchAsync(
     async (req: Request, _res: Response, next: NextFunction) => {
-      const token = req.headers.authorization;
+
+      let token=''
+      const authorizationHeader = req.headers.authorization;
+
+      if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {
+        const bearerToken = authorizationHeader.split(' ')[1];
+        // Handle the Bearer token
+       
+        token = bearerToken;
+      } else {
+        token = authorizationHeader || ''
+      }
       // checking if the token is missing
       if (!token) {
         throw new CustomError(
