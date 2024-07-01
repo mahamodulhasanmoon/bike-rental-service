@@ -3,9 +3,10 @@ import { requestValidator } from '../../middlewares/requestValidator';
 import { createUserValidation, loginValidation } from './auth.validaton';
 import {
   createUserController,
-  getMe,
+  getRefreshToken,
   loginController,
 } from './auth.controller';
+
 
 export const authRoutes: Router = Router();
 
@@ -21,5 +22,5 @@ authRoutes.post(
 );
 authRoutes.get(
   '/me',
-  getMe,
+  getRefreshToken,
 );

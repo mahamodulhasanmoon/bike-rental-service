@@ -9,6 +9,7 @@ import {
 import { sendResponse } from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { NODE_ENV } from '../../config';
+import { ChildProcess } from 'child_process';
 
 export const createUserController: RequestHandler = catchAsync(
   async (req, res) => {
@@ -41,9 +42,10 @@ export const loginController: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
-export const getMe: RequestHandler = catchAsync(async (req, res) => {
+export const getRefreshToken: RequestHandler = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
   const result = await refreshTokenService(refreshToken);
+  console.log(result);
   sendResponse(res, {
     status: httpStatus.OK,
     success: true,
