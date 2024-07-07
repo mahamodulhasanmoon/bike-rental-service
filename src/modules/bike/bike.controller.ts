@@ -12,8 +12,8 @@ import httpStatus from 'http-status';
 
 export const createBikeController: RequestHandler = catchAsync(
   async (req, res) => {
-    const demoData: IBike = req.body;
-    const result = await createBikeService(demoData);
+    const bikeData: IBike = req.body;
+    const result = await createBikeService(bikeData);
     sendResponse(res, {
       status: httpStatus.CREATED,
       success: true,

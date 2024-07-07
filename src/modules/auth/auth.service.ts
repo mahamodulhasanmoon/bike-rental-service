@@ -94,5 +94,5 @@ export const refreshTokenService = async (token: string) => {
     access_tokenExpiry,
   );
 
-  return accessToken;
+  return {accessToken,user};
 };

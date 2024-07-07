@@ -99,7 +99,7 @@ export const returnBookingService = async (id: string) => {
   try {
     // need to update bike conditions
     await Bike.findByIdAndUpdate(
-      id,
+      (bookingData as any)?.bikeId,
       { isAvailable: true },
       { ridingSession, new: true },
     );

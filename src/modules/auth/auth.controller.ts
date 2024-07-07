@@ -9,7 +9,7 @@ import {
 import { sendResponse } from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { NODE_ENV } from '../../config';
-import { ChildProcess } from 'child_process';
+
 
 export const createUserController: RequestHandler = catchAsync(
   async (req, res) => {
@@ -44,12 +44,12 @@ export const loginController: RequestHandler = catchAsync(async (req, res) => {
 
 export const getRefreshToken: RequestHandler = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
-  const result = await refreshTokenService(refreshToken);
-  console.log(result);
+  const {user,accessToken} = await refreshTokenService(refreshToken);
   sendResponse(res, {
     status: httpStatus.OK,
     success: true,
     message: 'Access token is retrieved succesfully!',
-    token: result,
+    token: accessToken,
+    data: user,
   });
 });

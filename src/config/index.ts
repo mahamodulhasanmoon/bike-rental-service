@@ -11,6 +11,6 @@ export const redisUrl = process.env.ORIGIN;
 export const defaultPass = process.env.DEFAULT_PASS;
 export const saltRound = process.env.SALT_ROUND;
 export const access_tokenExpiry: string =
-  process.env.ACCESS_TOKEN_EXPIRE || '360';
+  process.env.ACCESS_TOKEN_EXPIRE || '1d';
 export const refresh_tokenExpiry: string =
   process.env.REFRESH_TOKEN_EXPIRE || '30d';
